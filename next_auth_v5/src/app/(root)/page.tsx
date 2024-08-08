@@ -1,5 +1,5 @@
 import SignInForm from '@/components/sign_in_form';
-import SocialLogin from '@/components/social_login';
+import SocialLogin from '@/components/social_login/social_login';
 import Image from "next/image";
 import Link from 'next/link';
 
