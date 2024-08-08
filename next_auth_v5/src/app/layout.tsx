@@ -16,7 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-white text-[#0C1421] antialiased`}>{children}</body>
+      <body className={`${inter.className} relative w-screen h-screen bg-slate-100 text-[#0C1421] antialiased [&::-webkit-scrollbar]:hidden flex flex-col justify-center items-center lg:px-6 py-4 lg:py-20 max-w-screen-xl mx-auto`}>
+          {children}
+      </body>
     </html>
   );
 }
