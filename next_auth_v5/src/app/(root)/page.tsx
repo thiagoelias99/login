@@ -1,10 +1,14 @@
+import { auth } from '@/auth';
 import SignInForm from '@/components/sign_in_form';
 import SocialLogin from '@/components/social_login/social_login';
 import Image from "next/image";
 import Link from 'next/link';
+import { redirect } from 'next/navigation'
 
 export default async function Home() {
-  
+  const session = await auth()
+
+  if (session) {redirect('/home')}
 
   return (
     <main className='w-full bg-white p-6 flex flex-col lg:flex-row-reverse lg:justify-center gap-7 rounded-2xl'>
