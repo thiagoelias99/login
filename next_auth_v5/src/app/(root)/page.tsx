@@ -18,7 +18,7 @@ export default async function Home() {
         width={1440}
         height={810}
         alt="background image"
-        className='w-full lg:w-2/3 rounded-3xl object-cover'
+        className='hidden sm:block w-full lg:w-2/3 rounded-3xl object-cover'
       />
       <div className='w-full max-w-[720px] flex flex-col gap-7 lg:justify-center'>
         <h1 className='text-2xl font-bold'>Welcome Back</h1>
