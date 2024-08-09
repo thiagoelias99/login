@@ -3,7 +3,9 @@ import SocialLogin from '@/components/social_login/social_login';
 import Image from "next/image";
 import Link from 'next/link';
 
-export default function Home() {
+export default async function Home() {
+  
+
   return (
     <main className='w-full bg-white p-6 flex flex-col lg:flex-row-reverse lg:justify-center gap-7 rounded-2xl'>
       <Image
