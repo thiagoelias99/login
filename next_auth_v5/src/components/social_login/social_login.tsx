@@ -1,5 +1,6 @@
 import Image from "next/image";
 import GoogleButton from './google_button';
+import GitHubButton from './github_button';
 
 export default function SocialLogin() {
   return (
@@ -11,19 +12,7 @@ export default function SocialLogin() {
       </div>
       <div className='w-full flex gap-4 mt-4'>
         <GoogleButton />
-        <button
-          type="button"
-          className='w-full flex justify-center items-center min-h-10 px-4 py-2 p-2 gap-4 bg-[#F3F9FA] text-white rounded-xl'
-        >
-          <Image
-            aria-hidden={true}
-            src="/facebook.svg"
-            width={24}
-            height={24}
-            alt="facebook logo"
-          />
-          <span className='text-[#313957]'>Facebook</span>
-        </button>
+        <GitHubButton />
       </div>
     </div>
   )
