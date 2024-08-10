@@ -13,6 +13,7 @@ export default function SignUpForm() {
   const [formErrors, setFormErrors] = useState<z.ZodIssue[] | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [testMessageUrl, setTestMessageUrl] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -30,6 +31,7 @@ export default function SignUpForm() {
       const response = await registerUser(validFormValue)
       if (response.status === 'success') {
         setTestMessageUrl(response.testMessageUrl as string)
+        setUserId(response.userId as string)
       } else {
         alert('Something went wrong while registering')
       }
@@ -59,7 +61,7 @@ export default function SignUpForm() {
         <span className='ml-4'>Sign Up</span>
       </FormSubmitButton>
 
-      <EmailConfirmDialog testMessageUrl={testMessageUrl} />
+      <EmailConfirmDialog testMessageUrl={testMessageUrl} userId={userId} />
     </form>
   )
 }

@@ -2,9 +2,10 @@ import Link from 'next/link'
 
 interface EmailConfirmDialogProps {
   testMessageUrl: string | null
+  userId: string | null
 }
 
-export default function EmailConfirmDialog({ testMessageUrl }: EmailConfirmDialogProps) {
+export default function EmailConfirmDialog({ testMessageUrl, userId }: EmailConfirmDialogProps) {
   return (
     <div
       className={`fixed inset-0 w-full h-screen bg-black bg-opacity-70 flex justify-center items-center px-16 ${!!testMessageUrl ? 'visible' : 'hidden'}`}
@@ -21,7 +22,7 @@ export default function EmailConfirmDialog({ testMessageUrl }: EmailConfirmDialo
         >
           Access Temporary Email
         </a>
-        <Link href='/confirm-email'
+        <Link href={`/confirm-email?user=${userId}`}
           className='w-full p-2 bg-[#162D3A] text-white rounded-md text-center'
         >Continue
         </Link>
