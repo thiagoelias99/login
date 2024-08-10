@@ -6,9 +6,13 @@ import FormSubmitButton from './form_submit_button'
 import { useState } from 'react'
 import { registerUser } from '@/actions/register_user'
 import { registerUserDtoSchema } from '@/dto/register_user.dto'
+import { Loader2Icon } from 'lucide-react'
+import EmailConfirmDialog from './email_confirm_dialog'
 
 export default function SignUpForm() {
   const [formErrors, setFormErrors] = useState<z.ZodIssue[] | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [testMessageUrl, setTestMessageUrl] = useState<string | null>(null)
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -22,7 +26,14 @@ export default function SignUpForm() {
         setFormErrors([{ path: ['confirmPassword'], message: 'Passwords do not match', code: 'custom' }])
         return
       }
-      await registerUser(validFormValue)
+      setIsSubmitting(true)
+      const response = await registerUser(validFormValue)
+      if (response.status === 'success') {
+        setTestMessageUrl(response.testMessageUrl as string)
+      } else {
+        alert('Something went wrong while registering')
+      }
+      setIsSubmitting(false)
     } catch (error) {
       if (error instanceof z.ZodError) {
         setFormErrors(error.issues)
@@ -37,12 +48,18 @@ export default function SignUpForm() {
       className='w-full flex flex-col gap-2'
       onSubmit={onSubmit}
     >
-      <FormInput type='text' id='firstName' name='firstName' label='First Name' errors={formErrors} />
-      <FormInput type='text' id='lastName' name='lastName' label='Last Name' errors={formErrors} />
-      <FormInput type='email' id='email' name='email' label='Email' errors={formErrors} />
-      <FormInput type='password' id='password' name='password' label='Password' errors={formErrors} />
-      <FormInput type='password' id='confirmPassword' name='confirmPassword' label='Confirm Password' errors={formErrors} />
-      <FormSubmitButton>Sign Up</FormSubmitButton>
+      <FormInput type='text' id='firstName' name='firstName' label='First Name' errors={formErrors} disabled={isSubmitting} />
+      <FormInput type='text' id='lastName' name='lastName' label='Last Name' errors={formErrors} disabled={isSubmitting} />
+      <FormInput type='email' id='email' name='email' label='Email' errors={formErrors} disabled={isSubmitting} />
+      <FormInput type='password' id='password' name='password' label='Password' errors={formErrors} disabled={isSubmitting} />
+      <FormInput type='password' id='confirmPassword' name='confirmPassword' label='Confirm Password' errors={formErrors} disabled={isSubmitting} />
+      <FormSubmitButton disabled={isSubmitting}
+      >
+        {isSubmitting && <Loader2Icon className='animate-spin inline-block w-6 h-6' />}
+        <span className='ml-4'>Sign Up</span>
+      </FormSubmitButton>
+
+      <EmailConfirmDialog testMessageUrl={testMessageUrl} />
     </form>
   )
 }
