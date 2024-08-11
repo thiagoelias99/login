@@ -1,17 +1,27 @@
+"use client"
+
 import Link from 'next/link'
 import FormInput from './form_input'
 import FormSubmitButton from './form_submit_button'
 import { signIn } from "next-auth/react"
+import { useSearchParams } from 'next/navigation'
 
 export default function SignInForm() {
+  const searchParams = useSearchParams()
+  const errorCode = searchParams.get('code') || null
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
     const formValue = Object.fromEntries(formData.entries())
 
-    await signIn("credentials", { redirectTo: "/home", ...formValue })
-  }
+    try {
+      await signIn("credentials", { redirectTo: "/home", ...formValue })
 
+    } catch (error) {
+      alert("Authentication failed")
+    }
+  }
 
   return (
     <form
@@ -35,6 +45,7 @@ export default function SignInForm() {
       />
       <Link href="/forgot-password" className='w-full text-end text-sm text-[#1E4AE9]'>Forgot Password?</Link>
       <FormSubmitButton>Sign In</FormSubmitButton>
+      {errorCode === 'credentials' && <p className='text-red-500 font-semibold text-sm'>Invalid credentials</p>}
     </form>
   )
 }
