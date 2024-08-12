@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import SignInForm from '@/components/sign_in_form'
-import SignUpForm from '@/components/sign_up_form'
+import SignForm from '@/components/sign_form'
 import SocialLogin from '@/components/social_login/social_login'
 
 export default function MainSection() {
@@ -13,7 +13,7 @@ export default function MainSection() {
       <h1 className='text-2xl font-bold'>{showSignUpForm ? "Welcome" : "Welcome Back"}</h1>
       <p className='max-w-prose text-sm text-[#313957]'>{showSignUpForm ? "Sign up" : "Sign in"} to access the application</p>
 
-      {showSignUpForm ? <SignUpForm /> : <SignInForm />}
+      <SignForm type={showSignUpForm ? "sign-up" : "sign-in"} />
       <SocialLogin />
 
       <div className='w-full flex gap-1 justify-center items-center'>

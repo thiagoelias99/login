@@ -1,14 +1,14 @@
 "use server"
 
 import nodemailer from 'nodemailer'
-import { registerUserDtoSchema } from '@/dto/register_user.dto';
+import { signFormSchema } from '@/dto/register_user.dto';
 import { getMailClient } from '@/lib/mailer';
 import { z } from 'zod';
 import { fireStore } from '@/lib/firebase'
 import { collection, addDoc } from 'firebase/firestore'
 import { add } from 'date-fns';
 
-export async function registerUser(dto: z.infer<typeof registerUserDtoSchema>) {
+export async function registerUser(dto: z.infer<typeof signFormSchema>) {
   try {
     const APPLICATION_URL = process.env.APPLICATION_URL
     const confirmationCode = Math.floor(1000 + Math.random() * 9000)
