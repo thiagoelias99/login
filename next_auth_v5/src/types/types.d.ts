@@ -1,3 +1,3 @@
 declare type SignFormProps = {
-  type: "sign-in" | "sign-up"
+  type: "sign-in" | "sign-up" | "reset-password";
 }
