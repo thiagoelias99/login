@@ -21,6 +21,7 @@ export default function SignForm({ type }: SignFormProps) {
   const formSchema = useMemo(() => signFormSchema({ type }), [type])
   const searchParams = useSearchParams()
   const errorCode = searchParams.get('code') || null
+  const message = searchParams.get('message') || null
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -92,6 +93,7 @@ export default function SignForm({ type }: SignFormProps) {
         <span className='ml-4'>{type === "sign-in" ? "Sign In" : "Sign Up"}</span>
       </FormSubmitButton>
       {errorCode === 'credentials' && <p className='text-red-500 font-semibold text-sm'>Invalid credentials</p>}
+      <p className='text-green-500 font-semibold text-sm'>{message === "email_confirmed" ? "Email confirmed successfully, you can now sign-in" : ""}</p>
 
       <EmailConfirmDialog testMessageUrl={testMessageUrl} userId={userId} />
     </form>

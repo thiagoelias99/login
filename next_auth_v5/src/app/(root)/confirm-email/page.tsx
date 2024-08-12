@@ -3,7 +3,7 @@
 import { confirmToken } from '@/actions/confirm_token';
 import { getUser } from '@/actions/get_user';
 import { Loader2Icon } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import OtpInput from 'react-otp-input';
 
@@ -15,6 +15,7 @@ export default function ConfirmEmailPage() {
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState(token);
   const [loading, setLoading] = useState(true);
+  const router = useRouter()
 
   useEffect(() => {
     if (userId) {
@@ -35,7 +36,7 @@ export default function ConfirmEmailPage() {
       const result = JSON.parse(await confirmToken(userId, otp))
       switch (result.status) {
         case 'success':
-          alert('Success')
+          router.push('/?message=email_confirmed')
           break;
 
         case 'invalid':
