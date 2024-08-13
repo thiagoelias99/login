@@ -51,7 +51,7 @@ export default function ConfirmEmailPage() {
   }
 
   return (
-    <div className='w-full flex flex-col justify-center items-center bg-white p-4 rounded-lg'>
+    <div className='w-full flex flex-col justify-center items-center bg-white p-4 rounded-lg max-w-screen-sm'>
       {loading ? (
         <Loader2Icon size='64' className='animate-spin' />
       ) : (

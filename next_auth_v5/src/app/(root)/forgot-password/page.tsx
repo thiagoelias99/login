@@ -30,7 +30,7 @@ export default function Page() {
   }
 
   return (
-    <div className='w-full bg-white rounded-lg p-4'>
+    <div className='w-full bg-white rounded-lg p-4 max-w-screen-sm'>
       <h1 className='text-2xl font-semibold'>Forgot Password</h1>
       <p className='mt-4 text-sm text-gray-500'>Enter your email address and if correct, we will send you a link to reset your password.</p>
       <form className='mt-2 w-full flex flex-col gap-4'
