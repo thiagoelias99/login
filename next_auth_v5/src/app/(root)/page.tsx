@@ -9,15 +9,18 @@ export default async function Home() {
   if (session) { redirect('/home') }
 
   return (
-    <main className='w-full bg-white p-6 flex flex-col lg:flex-row-reverse lg:justify-center gap-7 rounded-2xl'>
-      <Image
-        aria-hidden={true}
-        src="/login_image.jpg"
-        width={1440}
-        height={810}
-        alt="background image"
-        className='hidden sm:block w-full lg:w-2/3 rounded-3xl object-cover'
-      />
+    <main className='w-full h-full bg-white flex flex-col lg:flex-row-reverse lg:justify-center gap-7 rounded-2xl'>
+      <div className='relative w-full'>
+        <Image
+          aria-hidden={true}
+          src="/login_image.jpg"
+          fill
+          alt="background image"
+          placeholder='blur'
+          blurDataURL='/login_image.jpg'
+          className='hidden sm:block w-full lg:w-2/3 rounded-3xl object-cover'
+        />
+      </div>
       <MainSection />
     </main>
   );

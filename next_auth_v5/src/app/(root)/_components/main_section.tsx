@@ -8,7 +8,7 @@ export default function MainSection() {
   const [showSignUpForm, setShowSignUpForm] = useState(false)
 
   return (
-    <div className='w-full max-w-[720px] flex flex-col gap-7 lg:justify-center'>
+    <div className='w-full h-full max-w-[360px] flex flex-col gap-7 justify-start items-center lg:justify-center overflow-y-auto [&::-webkit-scrollbar]:hidden pl-6 py-2'>
       <h1 className='text-2xl font-bold'>{showSignUpForm ? "Welcome" : "Welcome Back"}</h1>
       <p className='max-w-prose text-sm text-[#313957]'>{showSignUpForm ? "Sign up" : "Sign in"} to access the application</p>
 
