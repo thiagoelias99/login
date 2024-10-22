@@ -4,7 +4,10 @@ import { Link } from '@inertiajs/react';
 export default function GoogleButton() {
     return (
         <Link
-            href={route('signIn', { provider: 'google' })}
+            href={route('signIn', {
+                provider: 'google',
+                prompt: 'login'
+            })}
             method='post'
             type="button"
             className={buttonVariants({
