@@ -2,7 +2,7 @@
 import GuestLayout from '@/Layouts/GuestLayout'
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
-import { useForm } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 import { Label } from '@/Components/ui/label';
 import { z } from 'zod'
 import { CaptionError } from '@/Components/ui/typography'
@@ -15,7 +15,7 @@ export default function Login() {
 
     type FormValues = z.infer<typeof formSchema>
     const form = useForm<FormValues>({
-        email: 'thiagoelias99@gmail.com',
+        email: '',
     })
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -25,7 +25,10 @@ export default function Login() {
             const validData = formSchema.parse(form.data)
             form.transform(() => validData)
             form.clearErrors()
-            form.post(route('signIn'))
+            form.post(route('signIn', [{
+                provider: "email",
+                prompt: "login"
+            }]))
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const errors = error.flatten().fieldErrors
@@ -68,9 +71,10 @@ export default function Login() {
 
                 <div className='w-full flex gap-1 justify-center items-center'>
                     <p className='text-sm text-muted-foreground'>Não possui conta?</p>
-                    <button
-                        // onClick={() => setShowSignUpForm(!showSignUpForm)}
-                        className='text-sm text-primary'>Cadastre</button>
+                    <Link
+                        href={route('register')}
+                        className='text-sm text-primary'>Cadastre
+                    </Link>
                 </div>
             </div>
         </GuestLayout>

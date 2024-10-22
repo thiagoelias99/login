@@ -2,7 +2,7 @@
 import GuestLayout from '@/Layouts/GuestLayout'
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
-import { useForm } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 import { Label } from '@/Components/ui/label';
 import { z } from 'zod'
 import { CaptionError } from '@/Components/ui/typography'
@@ -15,7 +15,7 @@ export default function Register() {
 
     type FormValues = z.infer<typeof formSchema>
     const form = useForm<FormValues>({
-        email: 'thiagoelias99@gmail.com',
+        email: '',
     })
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -25,7 +25,10 @@ export default function Register() {
             const validData = formSchema.parse(form.data)
             form.transform(() => validData)
             form.clearErrors()
-            form.post(route('signIn'))
+            form.post(route('signIn', [{
+                prompt: "create",
+                provider: "email"
+            }]))
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const errors = error.flatten().fieldErrors
@@ -43,8 +46,7 @@ export default function Register() {
     return (
         <GuestLayout>
             <div className='w-full h-full flex flex-col gap-4 justify-start items-center lg:justify-center overflow-y-auto [&::-webkit-scrollbar]:hidden px-6 py-6'>
-                <h1 className='text-2xl font-bold'>Bem vindo de volta</h1>
-                <p className='max-w-prose text-sm text-foreground'>Entre para acessar a aplicação</p>
+                <h1 className='text-2xl font-bold'>Cadastre para continuar</h1>
 
                 <form
                     onSubmit={onSubmit}
@@ -61,16 +63,17 @@ export default function Register() {
                     <Button
                         isLoading={form.processing}
                         className='w-full'
-                    >Entrar</Button>
+                    >Registrar</Button>
                 </form>
 
                 <SocialLogin />
 
                 <div className='w-full flex gap-1 justify-center items-center'>
-                    <p className='text-sm text-muted-foreground'>Não possui conta?</p>
-                    <button
-                        // onClick={() => setShowSignUpForm(!showSignUpForm)}
-                        className='text-sm text-primary'>Cadastre</button>
+                    <p className='text-sm text-muted-foreground'>Já possui conta?</p>
+                    <Link
+                        href={route('login')}
+                        className='text-sm text-primary'>Entre
+                    </Link>
                 </div>
             </div>
         </GuestLayout>

@@ -25,6 +25,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::get("/login", [KindeController::class, "login"])->name("login");
+Route::get("/register", [KindeController::class, "register"])->name("register");
 Route::post("/login", [KindeController::class, "signIn"])->name("signIn");
 Route::post("/logout", [KindeController::class, "logout"])->name("logout");
 Route::get("/kinde_callback", [KindeController::class,"kindeCallback"]);

@@ -16,9 +16,14 @@ class KindeController extends Controller
         return Inertia::render('Auth/Login');
     }
 
+    public function register(Request $request)
+    {
+        return Inertia::render('Auth/Register');
+    }
+
     public function signIn(Request $request)
     {
-        $credentials = $request->only('email', 'provider');
+        $credentials = $request->only('email', 'provider', 'prompt');
 
         $kindeConfig = [
             'issuerBaseUrl' => env('KINDE_ISSUER_BASE_URL'),
@@ -33,6 +38,10 @@ class KindeController extends Controller
         $state = 'some_random_state';
 
         $baseUrl = "{$kindeConfig['issuerBaseUrl']}/oauth2/auth?response_type=code&client_id={$kindeConfig['clientId']}&redirect_uri={$kindeConfig['redirectUrl']}&scope=openid%20profile%20email&state={$state}&lang={$kindeConfig['language']}";
+
+        if ($credentials['prompt'] === 'create') {
+            $baseUrl .= "&prompt={$credentials['prompt']}";
+        }
 
         switch ($credentials['provider']) {
             case 'google':
@@ -151,6 +160,6 @@ class KindeController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return Inertia::location(env('KINDE_ISSUER_BASE_URL') . '/logout' . '?redirect_to=' . env('APP_URL'));
     }
 }
