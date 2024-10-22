@@ -1,8 +1,9 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Transition } from '@headlessui/react';
+import { Button } from '@/Components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
+import { CaptionError } from '@/Components/ui/typography';
+import { laravelMessageMapper } from '@/lib/error.mapper';
 import { useForm } from '@inertiajs/react';
 import { FormEventHandler, useRef } from 'react';
 
@@ -50,97 +51,79 @@ export default function UpdatePasswordForm({
 
     return (
         <section className={className}>
-            <header>
-                <h2 className="text-lg font-medium text-gray-900">
-                    Update Password
-                </h2>
+            <Card className='w-full'>
+                <CardHeader>
+                    <CardTitle>Atualizar senha</CardTitle>
+                    <CardDescription>
+                        Certifique-se de que sua conta está usando uma senha longa e variada para manter a segurança.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
 
-                <p className="mt-1 text-sm text-gray-600">
-                    Ensure your account is using a long, random password to stay
-                    secure.
-                </p>
-            </header>
+                    <form onSubmit={updatePassword} className="space-y-4">
+                        <div>
+                            <Label
+                                htmlFor="current_password"
+                            >
+                                Senha Atual
+                            </Label>
 
-            <form onSubmit={updatePassword} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel
-                        htmlFor="current_password"
-                        value="Current Password"
-                    />
+                            <Input
+                                id="current_password"
+                                ref={currentPasswordInput}
+                                value={data.current_password}
+                                onChange={(e) =>
+                                    setData('current_password', e.target.value)
+                                }
+                                type="password"
+                                className="mt-1 block w-full"
+                                autoComplete="current-password"
+                            />
 
-                    <TextInput
-                        id="current_password"
-                        ref={currentPasswordInput}
-                        value={data.current_password}
-                        onChange={(e) =>
-                            setData('current_password', e.target.value)
-                        }
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                    />
+                            <CaptionError>{laravelMessageMapper(errors.current_password)}</CaptionError>
+                        </div>
 
-                    <InputError
-                        message={errors.current_password}
-                        className="mt-2"
-                    />
-                </div>
+                        <div>
+                            <Label htmlFor="password">Nova Senha</Label>
 
-                <div>
-                    <InputLabel htmlFor="password" value="New Password" />
+                            <Input
+                                id="password"
+                                ref={passwordInput}
+                                value={data.password}
+                                onChange={(e) => setData('password', e.target.value)}
+                                type="password"
+                                className="mt-1 block w-full"
+                                autoComplete="new-password"
+                            />
 
-                    <TextInput
-                        id="password"
-                        ref={passwordInput}
-                        value={data.password}
-                        onChange={(e) => setData('password', e.target.value)}
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                    />
+                            <CaptionError>{laravelMessageMapper(errors.password)}</CaptionError>
+                        </div>
 
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
+                        <div>
+                            <Label
+                                htmlFor="password_confirmation"
+                                >
+                                Confirme a Nova Senha
+                                </Label>
 
-                <div>
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
+                            <Input
+                                id="password_confirmation"
+                                value={data.password_confirmation}
+                                onChange={(e) =>
+                                    setData('password_confirmation', e.target.value)
+                                }
+                                type="password"
+                                className="mt-1 block w-full"
+                                autoComplete="new-password"
+                            />
 
-                    <TextInput
-                        id="password_confirmation"
-                        value={data.password_confirmation}
-                        onChange={(e) =>
-                            setData('password_confirmation', e.target.value)
-                        }
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                    />
+                            <CaptionError>{laravelMessageMapper(errors.password_confirmation)}</CaptionError>
+                        </div>
 
-                    <InputError
-                        message={errors.password_confirmation}
-                        className="mt-2"
-                    />
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
-
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0"
-                    >
-                        <p className="text-sm text-gray-600">
-                            Saved.
-                        </p>
-                    </Transition>
-                </div>
-            </form>
+                        <Button isLoading={processing}>Salvar</Button>
+                    </form>
+                </CardContent>
+            </Card>
         </section>
     );
 }

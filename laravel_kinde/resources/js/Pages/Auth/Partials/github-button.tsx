@@ -21,6 +21,7 @@ export default function GitHubButton() {
                 width={24}
                 height={24}
                 alt="github logo"
+                className='fill-purple-500'
             />
             <span>GitHub</span>
         </Link>

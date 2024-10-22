@@ -22,7 +22,7 @@ export default function GoogleButton() {
                 height={24}
                 alt="google logo"
             />
-            <span className='text-[#313957]'>Google</span>
+            <span>Google</span>
         </Link>
     )
 }
