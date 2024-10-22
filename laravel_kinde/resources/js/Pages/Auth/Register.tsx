@@ -1,121 +1,78 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+
+import GuestLayout from '@/Layouts/GuestLayout'
+import { Button } from '@/Components/ui/button'
+import { Input } from '@/Components/ui/input'
+import { useForm } from '@inertiajs/react'
+import { Label } from '@/Components/ui/label';
+import { z } from 'zod'
+import { CaptionError } from '@/Components/ui/typography'
+import SocialLogin from './Partials/SocialLogin';
 
 export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-    });
+    const formSchema = z.object({
+        email: z.string().email(),
+    })
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
+    type FormValues = z.infer<typeof formSchema>
+    const form = useForm<FormValues>({
+        email: 'thiagoelias99@gmail.com',
+    })
 
-        post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
-        });
-    };
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+
+        try {
+            const validData = formSchema.parse(form.data)
+            form.transform(() => validData)
+            form.clearErrors()
+            form.post(route('signIn'))
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                const errors = error.flatten().fieldErrors
+                Object.keys(errors).forEach((key) => {
+                    if (errors[key]) {
+                        form.setError(key as keyof FormValues, errors[key]![0])
+                    }
+                })
+            } else {
+                console.error(error)
+            }
+        }
+    }
 
     return (
         <GuestLayout>
-            <Head title="Register" />
+            <div className='w-full h-full flex flex-col gap-4 justify-start items-center lg:justify-center overflow-y-auto [&::-webkit-scrollbar]:hidden px-6 py-6'>
+                <h1 className='text-2xl font-bold'>Bem vindo de volta</h1>
+                <p className='max-w-prose text-sm text-foreground'>Entre para acessar a aplicação</p>
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                <form
+                    onSubmit={onSubmit}
+                    className='w-full flex flex-col gap-2'>
+                    <div>
+                        <Label htmlFor='email'>Email</Label>
+                        <Input
+                            name='email'
+                            value={form.data.email}
+                            onChange={e => form.setData('email', e.target.value)}
+                        />
+                        <CaptionError>{form.errors.email}</CaptionError>
+                    </div>
+                    <Button
+                        isLoading={form.processing}
+                        className='w-full'
+                    >Entrar</Button>
+                </form>
 
-                    <TextInput
-                        id="name"
-                        name="name"
-                        value={data.name}
-                        className="mt-1 block w-full"
-                        autoComplete="name"
-                        isFocused={true}
-                        onChange={(e) => setData('name', e.target.value)}
-                        required
-                    />
+                <SocialLogin />
 
-                    <InputError message={errors.name} className="mt-2" />
+                <div className='w-full flex gap-1 justify-center items-center'>
+                    <p className='text-sm text-muted-foreground'>Não possui conta?</p>
+                    <button
+                        // onClick={() => setShowSignUpForm(!showSignUpForm)}
+                        className='text-sm text-primary'>Cadastre</button>
                 </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        onChange={(e) => setData('email', e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
-
-                    <TextInput
-                        id="password_confirmation"
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={(e) =>
-                            setData('password_confirmation', e.target.value)
-                        }
-                        required
-                    />
-
-                    <InputError
-                        message={errors.password_confirmation}
-                        className="mt-2"
-                    />
-                </div>
-
-                <div className="mt-4 flex items-center justify-end">
-                    <Link
-                        href={route('login')}
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                        Already registered?
-                    </Link>
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
-                    </PrimaryButton>
-                </div>
-            </form>
+            </div>
         </GuestLayout>
-    );
+    )
 }

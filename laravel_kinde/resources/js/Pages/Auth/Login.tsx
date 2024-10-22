@@ -1,107 +1,78 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
 
-export default function Login({
-    status,
-    canResetPassword,
-}: {
-    status?: string;
-    canResetPassword: boolean;
-}) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
-        remember: false,
-    });
+import GuestLayout from '@/Layouts/GuestLayout'
+import { Button } from '@/Components/ui/button'
+import { Input } from '@/Components/ui/input'
+import { useForm } from '@inertiajs/react'
+import { Label } from '@/Components/ui/label';
+import { z } from 'zod'
+import { CaptionError } from '@/Components/ui/typography'
+import SocialLogin from './Partials/SocialLogin';
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
+export default function Login() {
+    const formSchema = z.object({
+        email: z.string().email(),
+    })
 
-        post(route('login'), {
-            onFinish: () => reset('password'),
-        });
-    };
+    type FormValues = z.infer<typeof formSchema>
+    const form = useForm<FormValues>({
+        email: 'thiagoelias99@gmail.com',
+    })
+
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+
+        try {
+            const validData = formSchema.parse(form.data)
+            form.transform(() => validData)
+            form.clearErrors()
+            form.post(route('signIn'))
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                const errors = error.flatten().fieldErrors
+                Object.keys(errors).forEach((key) => {
+                    if (errors[key]) {
+                        form.setError(key as keyof FormValues, errors[key]![0])
+                    }
+                })
+            } else {
+                console.error(error)
+            }
+        }
+    }
 
     return (
         <GuestLayout>
-            <Head title="Log in" />
+            <div className='w-full h-full flex flex-col gap-4 justify-start items-center lg:justify-center overflow-y-auto [&::-webkit-scrollbar]:hidden px-6 py-6'>
+                <h1 className='text-2xl font-bold'>Bem vindo de volta</h1>
+                <p className='max-w-prose text-sm text-foreground'>Entre para acessar a aplicação</p>
 
-            {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
-
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
-
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4 block">
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={(e) =>
-                                setData('remember', e.target.checked)
-                            }
+                <form
+                    onSubmit={onSubmit}
+                    className='w-full flex flex-col gap-2'>
+                    <div>
+                        <Label htmlFor='email'>Email</Label>
+                        <Input
+                            name='email'
+                            value={form.data.email}
+                            onChange={e => form.setData('email', e.target.value)}
                         />
-                        <span className="ms-2 text-sm text-gray-600">
-                            Remember me
-                        </span>
-                    </label>
-                </div>
+                        <CaptionError>{form.errors.email}</CaptionError>
+                    </div>
+                    <Button
+                        isLoading={form.processing}
+                        className='w-full'
+                    >Entrar</Button>
+                </form>
 
-                <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )}
+                <SocialLogin />
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
+                <div className='w-full flex gap-1 justify-center items-center'>
+                    <p className='text-sm text-muted-foreground'>Não possui conta?</p>
+                    <button
+                        // onClick={() => setShowSignUpForm(!showSignUpForm)}
+                        className='text-sm text-primary'>Cadastre</button>
                 </div>
-            </form>
+            </div>
         </GuestLayout>
-    );
+    )
 }

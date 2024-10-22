@@ -13,13 +13,12 @@ class KindeController extends Controller
 {
     public function login(Request $request)
     {
-        return to_route("welcome");
+        return Inertia::render('Auth/Login');
     }
 
     public function signIn(Request $request)
     {
-        $credentials = $request->only('email');
-        $credentials['provider'] = "email";
+        $credentials = $request->only('email', 'provider');
 
         $kindeConfig = [
             'issuerBaseUrl' => env('KINDE_ISSUER_BASE_URL'),
