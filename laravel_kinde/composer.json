@@ -54,6 +54,12 @@
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php -S localhost:8000 -t public\" \"php artisan queue:listen --tries=1\" \"php artisan pail\" \"npm run dev\" --names=server,queue,logs,vite"
+        ],
+        "seed": [
+            "@php artisan db:seed"
+        ],
+        "migrate": [
+            "@php artisan migrate --seed"
         ]
     },
     "extra": {

@@ -6,7 +6,7 @@ export interface User {
     picture: string;
     email: string;
     email_verified_at?: string;
-    level: UserLevelEnum;
+    role: RoleEnum;
 }
 
 export type PageProps<

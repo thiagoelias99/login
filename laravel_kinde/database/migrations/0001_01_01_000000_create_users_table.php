@@ -4,25 +4,32 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
+        Schema::create('roles', function (Blueprint $table) {
+            $table->string('role')->primary();
+            $table->string('label')->nullable();
+        });
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('role')->default('user')->index();
             $table->string('kinde_id')->nullable();
             $table->string('given_name')->nullable();
             $table->string('family_name')->nullable();
             $table->string('picture')->nullable();
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('role')->references('role')->on('roles')->onDelete('restrict');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -1,11 +1,7 @@
 import { User } from '@/types'
-import { UserLevelEnum } from '@/types/enums/user-level'
+import { RoleEnum } from '@/types/enums/role'
 
 
 export const isAdmin = (user: User): boolean => {
-    return user.level === UserLevelEnum.ADMIN
-}
-
-export const isTechnician = (user: User) => {
-    return user.level === UserLevelEnum.TECHNICIAN || user.level === UserLevelEnum.ADMIN
+    return user.role === RoleEnum.ADMIN
 }
