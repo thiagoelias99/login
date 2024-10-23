@@ -46,18 +46,23 @@ class ProfileController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         $request->validate([
-            'password' => ['required', 'current_password'],
+            'email' => ['required'],
         ]);
 
         $user = $request->user();
 
-        Auth::logout();
+        if ($user->email === $request->email) {
+            Auth::logout();
 
-        $user->delete();
+            $user->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+            return Redirect::to('/');
+        } else {
+            return Redirect::back()->withErrors(['email' => 'The provided email does not match your account email.']);
+        }
+
     }
 }

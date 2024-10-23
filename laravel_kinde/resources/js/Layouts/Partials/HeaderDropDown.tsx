@@ -29,7 +29,11 @@ export default function HeaderDropDown({ items = [] }: Props) {
             <DropdownMenuTrigger asChild>
                 <Button variant="secondary" size="icon" className="rounded-full">
                     <Avatar>
-                        <AvatarFallback>{user.name.substring(0,2) ?? 'Us'}</AvatarFallback>
+                        <AvatarImage
+                            src={user.picture}
+                            alt={user.name}
+                        />
+                        <AvatarFallback>{user.name.substring(0, 2) ?? 'Us'}</AvatarFallback>
                     </Avatar>
                     <span className="sr-only">Toggle user menu</span>
                 </Button>

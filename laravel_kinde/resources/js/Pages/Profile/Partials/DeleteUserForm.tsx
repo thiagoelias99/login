@@ -13,7 +13,7 @@ export default function DeleteUserForm({
 }: {
     className?: string;
 }) {
-    const passwordInput = useRef<HTMLInputElement>(null);
+    const emailInput = useRef<HTMLInputElement>(null);
 
     const {
         data,
@@ -23,7 +23,7 @@ export default function DeleteUserForm({
         reset,
         errors,
     } = useForm({
-        password: '',
+        email: '',
     });
 
     const deleteUser: FormEventHandler = (e) => {
@@ -31,7 +31,7 @@ export default function DeleteUserForm({
 
         destroy(route('profile.destroy'), {
             preserveScroll: true,
-            onError: () => passwordInput.current?.focus(),
+            onError: () => emailInput.current?.focus(),
             onFinish: () => reset(),
         });
     };
@@ -65,33 +65,33 @@ export default function DeleteUserForm({
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
                                     Uma vez que sua conta é excluída, todos os seus recursos e
-                                    dados serão permanentemente excluídos. <br />Confirme sua senha para continuar.
+                                    dados serão permanentemente excluídos. <br />Confirme seu email para continuar.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <form onSubmit={deleteUser} className="">
                                 <div className="">
                                     <Label
-                                        htmlFor="password"
+                                        htmlFor="email"
                                         className="sr-only"
                                     >
                                         Senha
                                     </Label>
 
                                     <Input
-                                        id="password"
-                                        type="password"
-                                        name="password"
-                                        ref={passwordInput}
-                                        value={data.password}
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        ref={emailInput}
+                                        value={data.email}
                                         onChange={(e) =>
-                                            setData('password', e.target.value)
+                                            setData('email', e.target.value)
                                         }
                                         className="mt-1 block w-full"
                                         autoFocus
-                                        placeholder="Senha"
+                                        placeholder="Email"
                                     />
 
-                                    <CaptionError>{laravelMessageMapper(errors.password)}</CaptionError>
+                                    <CaptionError>{laravelMessageMapper(errors.email)}</CaptionError>
                                 </div>
                             </form>
                             <AlertDialogFooter>

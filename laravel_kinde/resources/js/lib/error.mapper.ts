@@ -80,5 +80,8 @@ export function laravelMessageMapper(message?: string): string | undefined {
     if (message.includes('The password is incorrect.')) {
         return 'A senha está incorreta.';
     }
+    if (message.includes("The provided email does not match your account email.")) {
+        return "O email fornecido não corresponde ao seu email de conta.";
+    }
     return message;
 }

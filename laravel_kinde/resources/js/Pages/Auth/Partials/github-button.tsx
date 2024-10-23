@@ -1,19 +1,22 @@
-import { buttonVariants } from '@/Components/ui/button';
-import { Link } from '@inertiajs/react';
+import { Button, buttonVariants } from '@/Components/ui/button';
+import { Link, router } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function GitHubButton() {
+    const [isLoading, setIsLoading] = useState(false);
+
+    function handleButtonClick() {
+        setIsLoading(true);
+        router.post(route('signIn', {
+            provider: 'github',
+            prompt: 'login',
+        }));
+    }
+
     return (
-        <Link
-            href={route('signIn', {
-                provider: 'google',
-                prompt: 'login',
-            })}
-            method='post'
-            type="button"
-            className={buttonVariants({
-                variant: "default",
-                className: "gap-2"
-            })}
+        <Button
+            isLoading={isLoading}
+            onClick={() => handleButtonClick()}
         >
             <img
                 aria-hidden={true}
@@ -24,6 +27,6 @@ export default function GitHubButton() {
                 className='fill-purple-500'
             />
             <span>GitHub</span>
-        </Link>
+        </Button>
     )
 }

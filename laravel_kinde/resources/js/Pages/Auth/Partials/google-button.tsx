@@ -1,19 +1,22 @@
-import { buttonVariants } from '@/Components/ui/button';
-import { Link } from '@inertiajs/react';
+import { Button } from '@/Components/ui/button';
+import { router } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function GoogleButton() {
+    const [isLoading, setIsLoading] = useState(false);
+
+    function handleButtonClick() {
+        setIsLoading(true);
+        router.post(route('signIn', {
+            provider: 'google',
+            prompt: 'login',
+        }));
+    }
+
     return (
-        <Link
-            href={route('signIn', {
-                provider: 'google',
-                prompt: 'login'
-            })}
-            method='post'
-            type="button"
-            className={buttonVariants({
-                variant: "default",
-                className: "gap-2"
-            })}
+        <Button
+            isLoading={isLoading}
+            onClick={() => handleButtonClick()}
         >
             <img
                 aria-hidden={true}
@@ -23,6 +26,6 @@ export default function GoogleButton() {
                 alt="google logo"
             />
             <span>Google</span>
-        </Link>
+        </Button>
     )
 }
